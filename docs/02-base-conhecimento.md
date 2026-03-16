@@ -34,9 +34,35 @@ Essas adaptações permitem que o agente faça análises mais úteis, como ident
 
 ## Como os dados são carregados?
 
-Os arquivos JSON e CSV são carregados no início da sessão do agente. Os dados são lidos pelo backend (ex: Python) e armazenados em estruturas de dados que podem ser consultadas durante a conversa.
+Existem duas possibilidades principais para fornecer dados ao agente:
 
-Quando o usuário faz uma pergunta sobre suas finanças, o agente consulta os dados relevantes (como transações ou perfil financeiro) antes de gerar a resposta.
+1. **Injetar os dados diretamente no prompt**  
+   Copiando e colando as informações diretamente no contexto enviado ao modelo (Ctrl + C / Ctrl + V).  
+   Essa abordagem é simples, mas não escala bem para grandes volumes de dados.
+
+2. **Carregar os arquivos via código**  
+   Os dados podem ser carregados dinamicamente a partir de arquivos CSV ou JSON.  
+   Essa abordagem é mais organizada e recomendada para projetos reais.
+
+Exemplo em Python:
+
+```python
+import pandas as pd
+import json
+
+# CSV
+historico = pd.read_csv("data/historico_atendimento.csv")
+transacoes = pd.read_csv("data/transacoes.csv")
+
+# JSON
+with open("data/perfil_investidor.json", "r", encoding="utf-8") as f:
+    perfil = json.load(f)
+
+with open("data/produtos_financeiros.json", "r", encoding="utf-8") as f:
+    produtos = json.load(f)
+```
+
+Nesse modelo, os arquivos são carregados no início da execução e podem ser utilizados para montar o contexto enviado ao agente durante a conversa.
 
 ---
 
