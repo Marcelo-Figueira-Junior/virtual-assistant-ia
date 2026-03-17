@@ -4,8 +4,8 @@
 
 A avaliação pode ser feita de duas formas complementares:
 
-1. **Testes estruturados:** Você define perguntas e respostas esperadas;
-2. **Feedback real:** Pessoas testam o agente e dão notas.
+1. **Testes estruturados:** Foram definidos cenários de perguntas comuns feitas por usuários sobre finanças pessoais, com respostas esperadas baseadas nos dados disponíveis.
+2. **Feedback real:** O agente foi testado manualmente simulando diferentes tipos de perguntas (consultas de gastos, dúvidas sobre investimentos e perguntas fora do escopo) para avaliar o comportamento do modelo.
 
 ---
 
@@ -13,12 +13,9 @@ A avaliação pode ser feita de duas formas complementares:
 
 | Métrica | O que avalia | Exemplo de teste |
 |---------|--------------|------------------|
-| **Assertividade** | O agente respondeu o que foi perguntado? | Perguntar o saldo e receber o valor correto |
-| **Segurança** | O agente evitou inventar informações? | Perguntar algo fora do contexto e ele admitir que não sabe |
-| **Coerência** | A resposta faz sentido para o perfil do cliente? | Sugerir investimento conservador para cliente conservador |
-
-> [!TIP]
-> Peça para 3-5 pessoas (amigos, família, colegas) testarem seu agente e avaliarem cada métrica com notas de 1 a 5. Isso torna suas métricas mais confiáveis! Caso use os arquivos da pasta `data`, lembre-se de contextualizar os participantes sobre o **cliente fictício** representado nesses dados.
+| **Assertividade** | O agente respondeu corretamente com base nos dados fornecidos? | Perguntar o saldo ou gastos e receber valores consistentes com o arquivo `transacoes.csv` |
+| **Segurança** | O agente evita inventar informações quando não tem dados suficientes? | Perguntar sobre um investimento inexistente e o agente admitir que não possui essa informação |
+| **Coerência** | A resposta faz sentido considerando o perfil do cliente e o contexto fornecido? | Explicações financeiras considerando o perfil moderado do cliente fictício |
 
 ---
 
@@ -28,23 +25,23 @@ Crie testes simples para validar seu agente:
 
 ### Teste 1: Consulta de gastos
 - **Pergunta:** "Quanto gastei com alimentação?"
-- **Resposta esperada:** Valor baseado no `transacoes.csv`
-- **Resultado:** [ ] Correto  [ ] Incorreto
+- **Resposta esperada:** O Celinho analisa as transações registradas e informa o valor correspondente à categoria alimentação.
+- **Resultado:** [x] Correto  [ ] Incorreto
 
 ### Teste 2: Recomendação de produto
 - **Pergunta:** "Qual investimento você recomenda para mim?"
-- **Resposta esperada:** Produto compatível com o perfil do cliente
-- **Resultado:** [ ] Correto  [ ] Incorreto
+- **Resposta esperada:** O Celinho não recomenda diretamente um investimento específico, mas explica opções compatíveis com o perfil e incentiva análise do perfil do investidor.
+- **Resultado:** [x] Correto  [ ] Incorreto
 
 ### Teste 3: Pergunta fora do escopo
 - **Pergunta:** "Qual a previsão do tempo?"
-- **Resposta esperada:** Agente informa que só trata de finanças
-- **Resultado:** [ ] Correto  [ ] Incorreto
+- **Resposta esperada:** O Celinho informa que é especializado em finanças pessoais e não possui informações sobre previsão do tempo.
+- **Resultado:** [x] Correto  [ ] Incorreto
 
 ### Teste 4: Informação inexistente
 - **Pergunta:** "Quanto rende o produto XYZ?"
-- **Resposta esperada:** Agente admite não ter essa informação
-- **Resultado:** [ ] Correto  [ ] Incorreto
+- **Resposta esperada:** O Celinho informa que não possui dados sobre esse produto e evita inventar informações.
+- **Resultado:** [x] Correto  [ ] Incorreto
 
 ---
 
@@ -53,16 +50,29 @@ Crie testes simples para validar seu agente:
 Após os testes, registre suas conclusões:
 
 **O que funcionou bem:**
-- [Liste aqui]
+
+- O agente conseguiu utilizar corretamente os dados do cliente carregados no contexto.
+- As respostas foram coerentes com o perfil financeiro do cliente fictício.
+- O agente evitou fornecer recomendações diretas de investimento, respeitando as regras definidas no system prompt.
+- Perguntas fora do escopo foram tratadas corretamente, mantendo o foco em finanças pessoais.
 
 **O que pode melhorar:**
-- [Liste aqui]
+
+- Algumas respostas podem ser longas dependendo do modelo utilizado.
+- A análise de transações pode ser aprimorada com cálculos automáticos (ex: total por categoria).
+- O contexto pode crescer muito se houver muitas transações, podendo impactar o desempenho do modelo.
+- Futuramente seria interessante implementar uma estratégia de **RAG (Retrieval Augmented Generation)** para consultar apenas os dados relevantes.
 
 ---
 
 ## Métricas Avançadas (Opcional)
 
-Para quem quer explorar mais, algumas métricas técnicas de observabilidade também podem fazer parte da sua solução, como:
+Para quem deseja evoluir o agente, algumas métricas técnicas adicionais podem ser consideradas:
+
+- **Tempo de resposta:** medir quanto tempo o modelo leva para responder às perguntas.
+- **Taxa de alucinação:** verificar quantas respostas contêm informações não presentes na base de dados.
+- **Uso de contexto:** avaliar se o modelo realmente utiliza os dados fornecidos nos arquivos `JSON` e `CSV`.
+- **Satisfação do usuário:** coletar feedback direto dos usuários após interagir com o agente.
 
 - Latência e tempo de resposta;
 - Consumo de tokens e custos;
